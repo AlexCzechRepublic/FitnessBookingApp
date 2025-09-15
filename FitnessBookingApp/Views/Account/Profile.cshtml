@@ -1,0 +1,127 @@
+﻿@model FitnessBookingApp.Models.User
+
+<h2>Můj profil</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div style="color:red">@ViewBag.Error</div>
+}
+@if (ViewBag.Success != null)
+{
+    <div style="color:green">@ViewBag.Success</div>
+}
+
+<!-- Email -->
+<div class="mb-3">
+    <label>Email:</label>
+    <input id="emailInput" asp-for="Email" readonly class="form-control" />
+    <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#emailModal">Změnit</button>
+</div>
+
+<!-- Telefon -->
+<div class="mb-3">
+    <label>Telefon:</label>
+    <input id="phoneInput" asp-for="PhoneNumber" readonly class="form-control" />
+    <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#phoneModal">Změnit</button>
+</div>
+
+<!-- Ostatní pole -->
+<form asp-action="Profile" asp-controller="Profile" method="post">
+    <div class="mb-3">
+        <label>Jméno:</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Příjmení:</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Ulice:</label>
+        <input asp-for="Street" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Číslo popisné:</label>
+        <input asp-for="HouseNumber" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>PSČ:</label>
+        <input asp-for="PostalCode" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Město:</label>
+        <input asp-for="City" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Uložit změny</button>
+</form>
+
+<!-- Email modal -->
+<div class="modal fade" id="emailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="emailForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Změna e-mailu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Na e-mail vám posíláme doklady, informace o objednávkách a reklamacích.</p>
+                    <input type="email" id="modalEmailInput" class="form-control" required/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                    <button type="submit" class="btn btn-primary">Potvrdit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Phone modal -->
+<div class="modal fade" id="phoneModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="phoneForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Změna telefonu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="modalPhoneInput" class="form-control" required />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
+                    <button type="submit" class="btn btn-primary">Potvrdit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // AJAX email update
+        $("#emailForm").submit(function(e){
+            e.preventDefault();
+            var email = $("#newEmail").val();
+            $.post('@Url.Action("UpdateEmail", "Profile")', { Email: email })
+             .done(function(){
+                 $("#emailInput").val(email);
+                 $("#emailModal").modal('hide');
+             })
+             .fail(function(){ alert("Chyba při aktualizaci e-mailu"); });
+        });
+
+        // AJAX phone update
+        $("#phoneForm").submit(function(e){
+            e.preventDefault();
+            var phone = $("#newPhone").val();
+            $.post('@Url.Action("UpdatePhone", "Profile")', { PhoneNumber: phone })
+             .done(function(){
+                 $("#phoneInput").val(phone);
+                 $("#phoneModal").modal('hide');
+             })
+             .fail(function(){ alert("Chyba při aktualizaci telefonu"); });
+        });
+    </script>
+}

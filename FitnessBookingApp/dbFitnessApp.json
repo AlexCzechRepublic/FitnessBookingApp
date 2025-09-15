@@ -1,0 +1,85 @@
+{
+  "Users": [],
+  "Trainings": [
+    {
+      "Id": "115af520-0462-47b9-b111-a74e66863648",
+      "Date": "2025-09-08T18:00:00+02:00",
+      "DurationMinutes": 60,
+      "Capacity": 16,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "abc6999c-e149-4950-808a-375faad2a504",
+      "Date": "2025-09-10T18:00:00+02:00",
+      "DurationMinutes": 60,
+      "Capacity": 16,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "23a7e92c-5035-47c5-b715-8b72fe7279c0",
+      "Date": "2025-09-15T18:00:00+02:00",
+      "DurationMinutes": 60,
+      "Capacity": 16,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "419608e8-228f-44ec-aea5-5e65c0deb773",
+      "Date": "2025-09-17T18:00:00+02:00",
+      "DurationMinutes": 60,
+      "Capacity": 16,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "7369728c-13c2-4fa2-a8b7-c6b71520effa",
+      "Date": "2025-09-22T18:00:00+02:00",
+      "DurationMinutes": 60,
+      "Capacity": 16,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "85b3ad58-cb3c-4831-8377-aa4658151c2b",
+      "Date": "2025-09-24T18:00:00+02:00",
+      "DurationMinutes": 60,
+      "Capacity": 16,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "d60ab7fe-39ed-4041-ac41-321fbe7b1f59",
+      "Date": "2025-09-29T18:00:00+02:00",
+      "DurationMinutes": 60,
+      "Capacity": 16,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "a7b9cad3-d2d2-4dff-996a-79b3cd80ea7a",
+      "Date": "2025-10-01T18:00:00+02:00",
+      "DurationMinutes": 60,
+      "Capacity": 16,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "94ef2227-d5a6-4330-8877-ca69ed67b8a6",
+      "Date": "2025-09-04T16:08:00",
+      "DurationMinutes": 60,
+      "Capacity": 17,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    },
+    {
+      "Id": "21f49665-3665-419d-9596-7c16ff60cb66",
+      "Date": "2025-09-09T17:17:00",
+      "DurationMinutes": 60,
+      "Capacity": 19,
+      "RegisteredUsers": [],
+      "RegisteredCount": 0
+    }
+  ]
+}

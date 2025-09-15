@@ -1,0 +1,21 @@
+﻿@model FitnessBookingApp.Models.Training
+
+<h2>Upravit trénink</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Date">Datum a čas:</label>
+        <input asp-for="Date" class="form-control" type="datetime-local"
+               value="@Model.Date.ToString("yyyy-MM-ddTHH:mm")" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Capacity">Maximální počet lidí:</label>
+        <input asp-for="Capacity" class="form-control" type="number" min="1" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">Uložit</button>
+    <a asp-action="Index" class="btn btn-secondary mt-2">Zpět</a>
+</form>

@@ -1,0 +1,25 @@
+﻿@model FitnessBookingApp.Models.Training
+
+@{
+    ViewData["Title"] = "Nový trénink";
+}
+
+<h2>Přidat nový trénink</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Date">Datum a čas:</label>
+        <input asp-for="Date" class="form-control" type="datetime-local"
+               value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Capacity">Maximální počet lidí:</label>
+        <input asp-for="Capacity" class="form-control" type="number" min="1" />
+    </div>
+
+    <p>Délka je pevně 60 minut</p>
+
+    <button type="submit" class="btn btn-success mt-2">Vytvořit</button>
+    <a asp-action="Index" class="btn btn-secondary mt-2">Zpět</a>
+</form>

@@ -1,0 +1,28 @@
+﻿@model FitnessBookingApp.Models.User
+@{
+    ViewData["Title"] = "Přihlášení";
+}
+
+<h2>Přihlášení</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div style="color:red">@ViewBag.Error</div>
+}
+
+<form asp-action="Login" method="post">
+    <div>
+        <label>Uživatel:</label>
+        <input asp-for="Username" />
+    </div>
+    <div>
+        <label>Heslo:</label>
+        <input asp-for="Password" type="password" />
+    </div>
+    <button type="submit">Přihlásit</button>
+</form>
+
+<p>
+    Nemáte ještě účet?
+    <a asp-action="Register" asp-controller="Account">Zaregistrujte se zde</a>
+</p>

@@ -1,0 +1,84 @@
+﻿@model IEnumerable<FitnessBookingApp.Models.Training>
+
+@{
+    ViewBag.Title = "Kruhové cvičení - FitnessBookingApp";
+    var role = ViewBag.Role as string;
+    var username = Context.Session.GetString("User");
+}
+
+<h2>Kruhové cvičení
+    @if (role == "Admin")
+    {
+        <a asp-action="Create" class="btn btn-success mt-2">Přidat nový trénink</a>
+
+        <form asp-controller="Training" asp-action="GenerateNextMonth" method="post" style="display:inline">
+            <button type="submit" class="btn btn-info mt-2">Generovat tréninky na příští měsíc</button>
+        </form>
+    }
+
+</h2>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Datum a čas</th>
+            <th>Délka</th>
+            <th>Přihlášeno</th>
+            <th>Akce</th>
+            @if (role == "Admin")
+            {
+                <th>Admin Akce</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var training in Model)
+        {
+            <tr>
+                <td>@training.Date.ToString("dddd dd.MM.yyyy HH:mm")</td>
+                <td>60 minut</td>
+                <td>@training.TrainingRegistrations.Count / @training.Capacity</td>
+                <td>
+                    @{
+                        var isRegistered = training.TrainingRegistrations.Any(tr => tr.User.Username == username);
+                        var isFull = training.TrainingRegistrations.Count >= training.Capacity;
+                    }
+
+                    @if (!isRegistered && !isFull)
+                    {
+                        <form asp-action="Register" method="post">
+                            <input type="hidden" name="id" value="@training.Id" />
+                            <button type="submit" class="btn btn-primary">Přihlásit se</button>
+                        </form>
+                    }
+                    else if (isRegistered)
+                    {
+                        <form asp-action="Unregister" method="post">
+                            <input type="hidden" name="id" value="@training.Id" />
+                            <button type="submit" class="btn btn-warning">Odhlásit se</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Obsazeno</span>
+                    }
+                </td>
+
+                @if (role == "Admin")
+                {
+                    <td>
+                        <form asp-action="Delete" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@training.Id" />
+                            <button type="submit" class="btn btn-danger">Smazat</button>
+                        </form>
+                        <form asp-action="Edit" method="get" style="display:inline">
+                            <input type="hidden" name="id" value="@training.Id" />
+                            <button type="submit" class="btn btn-secondary">Upravit</button>
+                        </form>
+                    </td>
+                }
+            </tr>
+        }
+
+    </tbody>
+</table>
