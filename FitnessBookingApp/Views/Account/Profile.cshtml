@@ -1,58 +1,75 @@
 ﻿@model FitnessBookingApp.Models.User
-
-<h2>Můj profil</h2>
-
-@if (ViewBag.Error != null)
-{
-    <div style="color:red">@ViewBag.Error</div>
-}
-@if (ViewBag.Success != null)
-{
-    <div style="color:green">@ViewBag.Success</div>
+@{
+    ViewData["Title"] = "Můj profil";
 }
 
-<!-- Email -->
-<div class="mb-3">
-    <label>Email:</label>
-    <input id="emailInput" asp-for="Email" readonly class="form-control" />
-    <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#emailModal">Změnit</button>
-</div>
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h2 class="card-title mb-3 text-center">Můj profil</h2>
 
-<!-- Telefon -->
-<div class="mb-3">
-    <label>Telefon:</label>
-    <input id="phoneInput" asp-for="PhoneNumber" readonly class="form-control" />
-    <button type="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#phoneModal">Změnit</button>
-</div>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger" role="alert">@ViewBag.Error</div>
+                }
+                @if (ViewBag.Success != null)
+                {
+                    <div class="alert alert-success" role="alert">@ViewBag.Success</div>
+                }
 
-<!-- Ostatní pole -->
-<form asp-action="Profile" asp-controller="Profile" method="post">
-    <div class="mb-3">
-        <label>Jméno:</label>
-        <input asp-for="FirstName" class="form-control" />
+                <!-- Kontaktní údaje s modální úpravou -->
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <div class="d-flex gap-2">
+                        <input id="emailInput" asp-for="Email" readonly class="form-control" />
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#emailModal">Změnit</button>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Telefon</label>
+                    <div class="d-flex gap-2">
+                        <input id="phoneInput" asp-for="PhoneNumber" readonly class="form-control" />
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#phoneModal">Změnit</button>
+                    </div>
+                </div>
+
+                <!-- Ostatní údaje -->
+                <form asp-action="Profile" asp-controller="Profile" method="post" class="mt-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Jméno</label>
+                            <input asp-for="FirstName" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Příjmení</label>
+                            <input asp-for="LastName" class="form-control" />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Ulice</label>
+                            <input asp-for="Street" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Číslo popisné</label>
+                            <input asp-for="HouseNumber" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">PSČ</label>
+                            <input asp-for="PostalCode" class="form-control" />
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Město</label>
+                            <input asp-for="City" class="form-control" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success mt-3">Uložit změny</button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Příjmení:</label>
-        <input asp-for="LastName" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label>Ulice:</label>
-        <input asp-for="Street" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label>Číslo popisné:</label>
-        <input asp-for="HouseNumber" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label>PSČ:</label>
-        <input asp-for="PostalCode" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label>Město:</label>
-        <input asp-for="City" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-success">Uložit změny</button>
-</form>
+</div>
 
 <!-- Email modal -->
 <div class="modal fade" id="emailModal" tabindex="-1" aria-hidden="true">
@@ -65,7 +82,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Na e-mail vám posíláme doklady, informace o objednávkách a reklamacích.</p>
-                    <input type="email" id="modalEmailInput" class="form-control" required/>
+                    <input type="email" id="modalEmailInput" class="form-control" required />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
@@ -86,7 +103,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="modalPhoneInput" class="form-control" required />
+                    <input type="tel" id="modalPhoneInput" class="form-control" required />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
@@ -96,32 +113,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        // AJAX email update
-        $("#emailForm").submit(function(e){
-            e.preventDefault();
-            var email = $("#newEmail").val();
-            $.post('@Url.Action("UpdateEmail", "Profile")', { Email: email })
-             .done(function(){
-                 $("#emailInput").val(email);
-                 $("#emailModal").modal('hide');
-             })
-             .fail(function(){ alert("Chyba při aktualizaci e-mailu"); });
-        });
-
-        // AJAX phone update
-        $("#phoneForm").submit(function(e){
-            e.preventDefault();
-            var phone = $("#newPhone").val();
-            $.post('@Url.Action("UpdatePhone", "Profile")', { PhoneNumber: phone })
-             .done(function(){
-                 $("#phoneInput").val(phone);
-                 $("#phoneModal").modal('hide');
-             })
-             .fail(function(){ alert("Chyba při aktualizaci telefonu"); });
-        });
-    </script>
-}

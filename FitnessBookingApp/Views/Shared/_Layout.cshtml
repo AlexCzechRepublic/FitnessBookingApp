@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@* Shared layout *@
+<!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="utf-8" />
@@ -11,11 +12,11 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <!-- Vlastní styly -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- Načti .styles.css před site.css, aby site.css mělo prioritu -->
     <link rel="stylesheet" href="~/FitnessBookingApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
             <div class="container-fluid">
@@ -74,16 +75,16 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-4">
+    <footer class="border-top footer text-muted mt-auto">
         <div class="container">
             &copy; 2025 - FitnessBookingApp - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
-    <!-- JS -->
+    <!-- Skripty -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

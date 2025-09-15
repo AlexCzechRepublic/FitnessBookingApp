@@ -1,6 +1,8 @@
-/* === MODERN FITNESS BOOKING APP STYLES === */
+/* === FITNESS BOOKING APP – MODERN STYLES (REWRITE) === */
 
-/* CSS Variables for consistent theming */
+/* ==============================
+   Design tokens / CSS Variables
+   ============================== */
 :root {
     --primary-blue: #2563eb;
     --primary-blue-dark: #1d4ed8;
@@ -21,19 +23,24 @@
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --border-radius: 0.5rem;
-    --border-radius-lg: 0.75rem;
+    --radius: 0.5rem;
+    --radius-lg: 0.75rem;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Global Styles */
-* {
+/* =============
+   Global reset
+   ============= */
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    height: 100%;
 }
 
 body {
@@ -44,9 +51,20 @@ body {
     color: var(--gray-700);
     background: linear-gradient(135deg, var(--gray-50) 0%, var(--secondary-blue) 100%);
     min-height: 100vh;
+    /* Sticky footer layout (nezávislé na Bootstrap utilitách) */
+    display: flex;
+    flex-direction: column;
 }
 
-/* === NAVBAR STYLES === */
+    /* Zajistí, že hlavní container mezi headerem a footerem vyplní prostor
+   (cílí pouze na přímého potomka body, aby neovlivňoval jiné .container prvky) */
+    body > .container {
+        flex: 1 0 auto;
+    }
+
+/* ==========
+   NAVBAR
+   ========== */
 .navbar {
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%) !important;
     box-shadow: var(--shadow-lg);
@@ -73,7 +91,7 @@ body {
     color: var(--white) !important;
     font-weight: 500;
     padding: 0.5rem 1rem !important;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -100,12 +118,21 @@ body {
         transform: translateY(-2px);
     }
 
+.navbar-toggler {
+    border: none;
+    padding: 0.25rem 0.5rem;
+}
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
 .btn-outline-light {
     border: 2px solid var(--white);
     color: var(--white);
     font-weight: 600;
     padding: 0.5rem 1.5rem;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     transition: var(--transition);
     text-decoration: none;
 }
@@ -117,26 +144,12 @@ body {
         box-shadow: var(--shadow-md);
     }
 
-.navbar-toggler {
-    border: none;
-    padding: 0.25rem 0.5rem;
-}
-
-    .navbar-toggler:focus {
-        box-shadow: none;
-    }
-
-/* === CONTAINER STYLES === */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-/* === MAIN CONTENT === */
+/* ==========
+   MAIN
+   ========== */
 main {
     background: var(--white);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--radius-lg);
     padding: 2rem;
     margin: 2rem 0;
     box-shadow: var(--shadow-lg);
@@ -148,19 +161,20 @@ main {
     main::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
+        inset: 0 auto auto 0;
         right: 0;
         height: 4px;
         background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
-        border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
 
-/* === CARDS AND TRAINING ITEMS === */
+/* ==========
+   CARDS
+   ========== */
 .card {
     background: var(--white);
     border: 1px solid var(--gray-200);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
     margin-bottom: 1.5rem;
@@ -189,10 +203,12 @@ main {
     margin-bottom: 1rem;
 }
 
-/* === BUTTONS === */
+/* ==========
+   BUTTONS
+   ========== */
 .btn {
     font-weight: 600;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     padding: 0.75rem 1.5rem;
     transition: var(--transition);
     border: none;
@@ -293,7 +309,9 @@ main {
     font-size: 1.125rem;
 }
 
-/* === FORMS === */
+/* ==========
+   FORMS
+   ========== */
 .form-group {
     margin-bottom: 1.5rem;
 }
@@ -309,7 +327,7 @@ main {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 2px solid var(--gray-200);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     font-size: 1rem;
     transition: var(--transition);
     background: var(--white);
@@ -326,10 +344,12 @@ main {
         border-color: var(--gray-300);
     }
 
-/* === ALERTS === */
+/* ==========
+   ALERTS
+   ========== */
 .alert {
     padding: 1rem 1.5rem;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
     margin-bottom: 1.5rem;
     border: none;
     font-weight: 500;
@@ -360,12 +380,14 @@ main {
     border-left: 4px solid var(--primary-blue);
 }
 
-/* === TABLES === */
+/* ==========
+   TABLES
+   ========== */
 .table {
     width: 100%;
     border-collapse: collapse;
     background: var(--white);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
@@ -394,7 +416,9 @@ main {
         border-bottom: none;
     }
 
-/* === BADGES === */
+/* ==========
+   BADGES
+   ========== */
 .badge {
     padding: 0.375rem 0.75rem;
     border-radius: 9999px;
@@ -424,36 +448,21 @@ main {
     color: var(--white);
 }
 
-/* === FOOTER === */
-/* Opravuje footer aby byl na konci obsahu, ne p�es n�j */
+/* ==========
+   FOOTER
+   ========== */
+/* Sticky footer, nepřekrývá obsah, není fixed ani sticky */
+footer,
 .footer {
     background: var(--white);
     border-top: 1px solid var(--gray-200);
     padding: 2rem 0;
-    margin-top: auto; /* D�le�it� - pushne footer dol� */
     text-align: center;
     color: var(--gray-600);
-    position: relative; /* M�sto fixed/sticky */
-}
-
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--gray-700);
-    background: linear-gradient(135deg, var(--gray-50) 0%, var(--secondary-blue) 100%);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column; /* D�le�it� pro spr�vn� chov�n� */
-}
-
-/* Hlavn� content area zabere zbytek m�sta */
-.container {
-    flex: 1; /* Rozt�hne container aby footer byl dole */
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
+    position: static !important; /* jistota proti cizím stylům */
+    bottom: auto !important;
+    top: auto !important;
+    margin-top: auto; /* pokud nepoužiješ Bootstrap mt-auto na <footer> */
 }
 
     .footer a {
@@ -467,7 +476,9 @@ body {
             text-decoration: underline;
         }
 
-/* === ANIMATIONS === */
+/* ================
+   Animations
+   ================ */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -502,16 +513,17 @@ body {
     }
 }
 
-/* === LOADING ANIMATION === */
 .loading {
     animation: pulse 2s infinite;
 }
 
-/* === TRAINING LIST SPECIFIC STYLES === */
+/* ==============================
+   Training list (custom section)
+   ============================== */
 .training-item {
     background: var(--white);
     border: 1px solid var(--gray-200);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--radius-lg);
     padding: 1.5rem;
     margin-bottom: 1rem;
     transition: var(--transition);
@@ -574,16 +586,18 @@ body {
     transition: width 0.6s ease;
 }
 
-/* === RESPONSIVE DESIGN === */
+/* ===================
+   Responsive tweaks
+   =================== */
 @media (max-width: 768px) {
-    .container {
+    body > .container {
         padding: 0 0.75rem;
     }
 
     main {
         padding: 1.5rem;
         margin: 1rem 0;
-        border-radius: var(--border-radius);
+        border-radius: var(--radius);
     }
 
     .btn {
@@ -616,8 +630,7 @@ body {
         font-size: 0.875rem;
     }
 
-        .table th,
-        .table td {
+        .table th, .table td {
             padding: 0.75rem 0.5rem;
         }
 
@@ -648,7 +661,9 @@ body {
     }
 }
 
-/* === UTILITY CLASSES === */
+/* ===================
+   Utilities (limited)
+   =================== */
 .text-center {
     text-align: center;
 }
@@ -762,11 +777,11 @@ body {
 }
 
 .rounded {
-    border-radius: var(--border-radius);
+    border-radius: var(--radius);
 }
 
 .rounded-lg {
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--radius-lg);
 }
 
 .shadow-sm {
@@ -781,7 +796,6 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
-/* === HOVER EFFECTS === */
 .hover-lift {
     transition: var(--transition);
 }
@@ -791,14 +805,14 @@ body {
         box-shadow: var(--shadow-md);
     }
 
-/* === FOCUS STATES === */
+/* Focus states (a11y) */
 .btn:focus,
 .form-control:focus {
     outline: 2px solid var(--primary-blue);
     outline-offset: 2px;
 }
 
-/* === HIGH CONTRAST MODE === */
+/* High contrast mode */
 @media (prefers-contrast: high) {
     :root {
         --gray-600: #000000;
@@ -807,7 +821,7 @@ body {
     }
 }
 
-/* === REDUCED MOTION === */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -822,7 +836,7 @@ body {
     }
 }
 
-/* === PRINT STYLES === */
+/* Print */
 @media print {
     .navbar,
     .footer,

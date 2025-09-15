@@ -1,25 +1,46 @@
 ﻿@model FitnessBookingApp.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Registrace";
+}
 
-<h2>Registrace</h2>
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <h2 class="card-title mb-3 text-center">Registrace</h2>
 
-<form asp-action="Register" method="post">
-    <div>
-        <label>Uživatel:</label>
-        <input asp-for="Username" />
-        <span asp-validation-for="Username" style="color:red"></span>
+                <form asp-action="Register" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label">Uživatel</label>
+                        <input asp-for="Username" class="form-control" autocomplete="username" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Heslo</label>
+                        <input asp-for="Password" class="form-control" type="password" autocomplete="new-password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Potvrď heslo</label>
+                        <input asp-for="ConfirmPassword" class="form-control" type="password" autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Registrovat</button>
+                </form>
+
+                <p class="mt-3 text-center">
+                    Už máte účet?
+                    <a asp-action="Login" asp-controller="Account" class="link-primary">Přihlaste se</a>
+                </p>
+            </div>
+        </div>
     </div>
-    <div>
-        <label>Heslo:</label>
-        <input asp-for="Password" type="password" />
-        <span asp-validation-for="Password" style="color:red"></span>
-    </div>
-    <div>
-        <label>Potvrď heslo:</label>
-        <input asp-for="ConfirmPassword" type="password" />
-        <span asp-validation-for="ConfirmPassword" style="color:red"></span>
-    </div>
-    <button type="submit">Registrovat</button>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
