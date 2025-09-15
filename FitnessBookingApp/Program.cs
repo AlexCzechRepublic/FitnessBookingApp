@@ -1,6 +1,7 @@
 ﻿using FitnessBookingApp.Data;
 using FitnessBookingApp.Services;
 using Microsoft.EntityFrameworkCore;
+using FitnessBookingApp.Infrastructure; // <- přidej
 
 namespace FitnessBookingApp
 {
@@ -20,26 +21,29 @@ namespace FitnessBookingApp
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            builder.Services.AddHttpContextAccessor(); // <- přidej
             builder.Services.AddScoped<DataService>();
             builder.Services.AddDbContext<AppDbContext>(options =>
-             options.UseSqlServer(
-                 builder.Configuration.GetConnectionString("DefaultConnection"),
-                 sqlOptions => sqlOptions.EnableRetryOnFailure(
-                     maxRetryCount: 5,             // počet pokusů
-                     maxRetryDelay: TimeSpan.FromSeconds(10),  // prodleva mezi pokusy
-                     errorNumbersToAdd: null       // můžeš specifikovat SQL error kódy
-                 )
-             )
-         );
-
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorNumbersToAdd: null
+                    )
+                )
+            );
 
             var app = builder.Build();
+
+            // Inicializuj ServiceLocator
+            ServiceLocator.Init(app.Services); // <- přidej
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -48,7 +52,7 @@ namespace FitnessBookingApp
 
             app.UseRouting();
 
-            app.UseSession(); // ⚡ musí být před UseAuthorization
+            app.UseSession();
             app.UseAuthorization();
 
             app.MapControllerRoute(

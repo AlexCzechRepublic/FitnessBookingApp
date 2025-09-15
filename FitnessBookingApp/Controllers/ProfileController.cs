@@ -2,6 +2,7 @@
 using FitnessBookingApp.Models;
 using FitnessBookingApp.Services;
 using Microsoft.AspNetCore.Identity;
+using FitnessBookingApp.Utils;
 
 namespace FitnessBookingApp.Controllers
 {
@@ -16,20 +17,6 @@ namespace FitnessBookingApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
-        {
-            var username = HttpContext.Session.GetString("User");
-            if (string.IsNullOrEmpty(username))
-                return RedirectToAction("Login", "Account");
-
-            var user = _dataService.GetUserByName(username);
-            if (user == null) return NotFound();
-
-            // Explicitně odkaz na view v Account
-            return View("~/Views/Account/Profile.cshtml", user);
-        }
-
-        [HttpGet]
         public IActionResult Profile()
         {
             var username = HttpContext.Session.GetString("User");
@@ -38,11 +25,13 @@ namespace FitnessBookingApp.Controllers
             var user = _dataService.GetUserByName(username);
             if (user == null) return NotFound();
 
-            return View(user); // Views/Account/Profile.cshtml
+            ViewBag.Success = TempData["Success"];
+            return View("~/Views/Account/Profile.cshtml", user);
         }
 
         [HttpPost]
-        public IActionResult Profile(User model)
+        [ValidateAntiForgeryToken]
+        public IActionResult Profile(ProfileUpdateViewModel model)
         {
             var username = HttpContext.Session.GetString("User");
             if (string.IsNullOrEmpty(username)) return RedirectToAction("Login", "Account");
@@ -50,7 +39,19 @@ namespace FitnessBookingApp.Controllers
             var user = _dataService.GetUserByName(username);
             if (user == null) return NotFound();
 
-            // Aktualizujeme jen klasická pole
+            if (!ModelState.IsValid)
+            {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Street = model.Street;
+                user.HouseNumber = model.HouseNumber;
+                user.PostalCode = model.PostalCode;
+                user.City = model.City;
+
+                return View("~/Views/Account/Profile.cshtml", user);
+            }
+
+            // Přepiš profilová pole a ulož
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Street = model.Street;
@@ -59,38 +60,48 @@ namespace FitnessBookingApp.Controllers
             user.City = model.City;
 
             _dataService.UpdateUser(user);
-            ViewBag.Success = "Profil byl úspěšně aktualizován!";
-            return View("~/Views/Account/Profile.cshtml", user);
+
+            TempData["Success"] = "Profil byl úspěšně aktualizován!";
+            return RedirectToAction(nameof(Profile));
         }
 
-        // AJAX endpoints pro email a telefon
+        // AJAX: telefon
         [HttpPost]
-        public IActionResult UpdateEmail(string Email)
-        {
-            var username = HttpContext.Session.GetString("User");
-            if (string.IsNullOrEmpty(username)) return BadRequest();
-
-            var user = _dataService.GetUserByName(username);
-            if (user == null) return NotFound();
-
-            user.Email = Email;
-            _dataService.UpdateUser(user);
-            return Ok();
-        }
-
-        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdatePhone(string PhoneNumber)
         {
             var username = HttpContext.Session.GetString("User");
-            if (string.IsNullOrEmpty(username)) return BadRequest();
+            if (string.IsNullOrEmpty(username)) return BadRequest("Není přihlášen uživatel.");
+
+            if (!PhoneUtils.TryNormalizeFull(PhoneNumber, out var normalized, out var error))
+                return BadRequest(error);
 
             var user = _dataService.GetUserByName(username);
             if (user == null) return NotFound();
 
-            user.PhoneNumber = PhoneNumber;
+            user.PhoneNumber = normalized;
+            _dataService.UpdateUser(user);
+
+            return Ok(PhoneUtils.FormatDisplay(normalized));
+        }
+
+        // AJAX: e-mail
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateEmail(string Email)
+        {
+            var username = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(username)) return BadRequest("Není přihlášen uživatel.");
+
+            if (string.IsNullOrWhiteSpace(Email) || !new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(Email))
+                return BadRequest("Neplatný e‑mail.");
+
+            var user = _dataService.GetUserByName(username);
+            if (user == null) return NotFound();
+
+            user.Email = Email.Trim();
             _dataService.UpdateUser(user);
             return Ok();
         }
-
     }
 }

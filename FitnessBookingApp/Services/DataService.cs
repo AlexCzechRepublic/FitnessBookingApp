@@ -14,10 +14,7 @@ namespace FitnessBookingApp.Services
         }
 
         // --- USERS ---
-        public List<User> GetUsers()
-        {
-            return _context.tbUsers.ToList();
-        }
+        public List<User> GetUsers() => _context.tbUsers.ToList();
 
         public void AddUser(User user)
         {
@@ -36,10 +33,9 @@ namespace FitnessBookingApp.Services
             return _context.tbTrainings
                 .Include(t => t.TrainingRegistrations)
                 .ThenInclude(tr => tr.User)
-                .OrderBy(t => t.Date) // 👈 tady seřadíš už v databázi
+                .OrderBy(t => t.Date)
                 .ToList();
         }
-
 
         public void AddTraining(Training training)
         {
@@ -50,8 +46,8 @@ namespace FitnessBookingApp.Services
         public void UpdateTraining(Training training)
         {
             var existing = _context.tbTrainings
-                .Include(t => t.TrainingRegistrations)      // zahrne registrace
-                    .ThenInclude(tr => tr.User)            // a uživatele
+                .Include(t => t.TrainingRegistrations)
+                    .ThenInclude(tr => tr.User)
                 .FirstOrDefault(t => t.Id == training.Id);
 
             if (existing != null)
@@ -59,14 +55,9 @@ namespace FitnessBookingApp.Services
                 existing.Date = training.Date;
                 existing.DurationMinutes = training.DurationMinutes;
                 existing.Capacity = training.Capacity;
-
-                // Pokud chceš aktualizovat registrace, můžeš je tu upravit
-                // zatím se nechává jak jsou
-
                 _context.SaveChanges();
             }
         }
-
 
         public void DeleteTraining(Guid id)
         {
@@ -104,19 +95,27 @@ namespace FitnessBookingApp.Services
             _context.tbTrainings.AddRange(trainings);
             _context.SaveChanges();
         }
+
         public void UpdateUser(User user)
         {
             var existing = _context.tbUsers.FirstOrDefault(u => u.Id == user.Id);
             if (existing != null)
             {
-                existing.Email = user.Email;
+                // Profilová data
                 existing.FirstName = user.FirstName;
                 existing.LastName = user.LastName;
-                existing.Password = user.Password; // hashované heslo
+                existing.Street = user.Street;
+                existing.HouseNumber = user.HouseNumber;
+                existing.PostalCode = user.PostalCode;
+                existing.City = user.City;
+
+                // Kontakty (kvůli AJAX změnám e‑mailu/telefonu)
+                existing.Email = user.Email;
+                existing.PhoneNumber = user.PhoneNumber;
+
+                // Username/Role/Password zde neměníme
                 _context.SaveChanges();
             }
         }
-
-
     }
 }

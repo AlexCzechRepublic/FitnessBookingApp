@@ -1,6 +1,8 @@
 ﻿@model FitnessBookingApp.Models.User
+@using FitnessBookingApp.Utils
 @{
     ViewData["Title"] = "Můj profil";
+    string phoneDisplay = Model.PhoneNumber is not null ? PhoneUtils.FormatDisplay(Model.PhoneNumber) : "";
 }
 
 <div class="row justify-content-center">
@@ -18,49 +20,58 @@
                     <div class="alert alert-success" role="alert">@ViewBag.Success</div>
                 }
 
-                <!-- Kontaktní údaje s modální úpravou -->
                 <div class="mb-3">
                     <label class="form-label">Email</label>
                     <div class="d-flex gap-2">
                         <input id="emailInput" asp-for="Email" readonly class="form-control" />
                         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#emailModal">Změnit</button>
                     </div>
+                    <div class="form-text">Zadejte platný e‑mail (např. uzivatel@example.com).</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Telefon</label>
                     <div class="d-flex gap-2">
-                        <input id="phoneInput" asp-for="PhoneNumber" readonly class="form-control" />
+                        <input id="phoneInput" value="@phoneDisplay" readonly class="form-control" />
                         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#phoneModal">Změnit</button>
                     </div>
+                    <div class="form-text">Podporujeme čísla z ČR (+420) a SR (+421).</div>
                 </div>
 
-                <!-- Ostatní údaje -->
-                <form asp-action="Profile" asp-controller="Profile" method="post" class="mt-4">
+                <form asp-action="Profile" asp-controller="Profile" method="post" class="mt-4" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Jméno</label>
                             <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Příjmení</label>
                             <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
                         <div class="col-md-8">
                             <label class="form-label">Ulice</label>
                             <input asp-for="Street" class="form-control" />
+                            <span asp-validation-for="Street" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Číslo popisné</label>
                             <input asp-for="HouseNumber" class="form-control" />
+                            <span asp-validation-for="HouseNumber" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">PSČ</label>
                             <input asp-for="PostalCode" class="form-control" />
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
                         </div>
                         <div class="col-md-8">
                             <label class="form-label">Město</label>
                             <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -75,7 +86,8 @@
 <div class="modal fade" id="emailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="emailForm">
+            <form id="emailForm" method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-header">
                     <h5 class="modal-title">Změna e-mailu</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -83,6 +95,7 @@
                 <div class="modal-body">
                     <p>Na e-mail vám posíláme doklady, informace o objednávkách a reklamacích.</p>
                     <input type="email" id="modalEmailInput" class="form-control" required />
+                    <div class="form-text">Příklad: uzivatel@example.com</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
@@ -97,13 +110,29 @@
 <div class="modal fade" id="phoneModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="phoneForm">
+            <form id="phoneForm" method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-header">
                     <h5 class="modal-title">Změna telefonu</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="tel" id="modalPhoneInput" class="form-control" required />
+                    <div class="row g-2 align-items-end">
+                        <div class="col-5">
+                            <label for="modalPhoneCountry" class="form-label">Předvolba</label>
+                            <select id="modalPhoneCountry" class="form-select">
+                                <option value="+420">🇨🇿 +420</option>
+                                <option value="+421">🇸🇰 +421</option>
+                            </select>
+                        </div>
+                        <div class="col-7">
+                            <label for="modalPhoneLocal" class="form-label">Číslo</label>
+                            <input type="tel" id="modalPhoneLocal" class="form-control" inputmode="numeric" placeholder="777 777 777" />
+                        </div>
+                    </div>
+                    <div class="form-text mt-1">
+                        Zadejte 9 číslic bez mezer. Podporujeme ČR (+420) a SR (+421). Můžete vložit i celé číslo (např. +421 901 123 456).
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušit</button>
@@ -113,3 +142,141 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            function clean(s) { return (s || '').toString().trim().replace(/[^\d+]/g, ''); }
+            function digitsOnly(s) { return (s || '').toString().replace(/\D/g, ''); }
+            function formatDisplay(normalized) {
+                const m = normalized.match(/^(\+\d{3})(\d{3})(\d{3})(\d{3})$/);
+                return m ? `${m[1]} ${m[2]} ${m[3]} ${m[4]}` : normalized;
+            }
+            function showAlert(message, type) {
+                const container = document.querySelector('main .card-body') || document.querySelector('main');
+                if (!container) return;
+                const el = document.createElement('div');
+                el.className = 'alert alert-' + type;
+                el.role = 'alert';
+                el.textContent = message;
+                container.prepend(el);
+                setTimeout(() => el.remove(), 4000);
+            }
+
+            // Prefill modálu podle uloženého čísla
+            const phoneModalEl = document.getElementById('phoneModal');
+            phoneModalEl?.addEventListener('show.bs.modal', function () {
+                const current = document.getElementById('phoneInput')?.value || '';
+                const cleaned = clean(current);
+                const country = document.getElementById('modalPhoneCountry');
+                const local = document.getElementById('modalPhoneLocal');
+
+                let cc = '+420';
+                let localDigits = '';
+
+                if (/^\+420\d{9}$/.test(cleaned)) { cc = '+420'; localDigits = cleaned.substring(4); }
+                else if (/^\+421\d{9}$/.test(cleaned)) { cc = '+421'; localDigits = cleaned.substring(4); }
+                else if (/^00420\d{9}$/.test(cleaned)) { cc = '+420'; localDigits = cleaned.substring(5); }
+                else if (/^00421\d{9}$/.test(cleaned)) { cc = '+421'; localDigits = cleaned.substring(5); }
+
+                country.value = cc;
+                // zobrazení s mezerami 3-3-3
+                if (localDigits) {
+                    local.value = `${localDigits.substring(0,3)} ${localDigits.substring(3,6)} ${localDigits.substring(6,9)}`;
+                } else {
+                    local.value = '';
+                }
+                setTimeout(() => local.focus(), 50);
+            });
+
+            // Při psaní do lokálního čísla udržuj 3-3-3 mezery
+            const modalPhoneLocal = document.getElementById('modalPhoneLocal');
+            modalPhoneLocal?.addEventListener('input', function () {
+                const d = digitsOnly(this.value).replace(/^0+/, ''); // odstraníme úvodní nuly
+                const a = d.slice(0, 3), b = d.slice(3, 6), c = d.slice(6, 9);
+                this.value = [a, b, c].filter(Boolean).join(' ');
+            });
+
+            // Umožni vložit celé číslo (např. +421 901 123 456) do lokálního pole — rozpadni ho
+            modalPhoneLocal?.addEventListener('blur', function () {
+                const raw = clean(this.value);
+                const country = document.getElementById('modalPhoneCountry');
+                if (/^\+420\d{9}$/.test(raw)) {
+                    country.value = '+420';
+                    const d = raw.substring(4);
+                    this.value = `${d.slice(0,3)} ${d.slice(3,6)} ${d.slice(6,9)}`;
+                } else if (/^\+421\d{9}$/.test(raw)) {
+                    country.value = '+421';
+                    const d = raw.substring(4);
+                    this.value = `${d.slice(0,3)} ${d.slice(3,6)} ${d.slice(6,9)}`;
+                }
+            });
+
+            function postFormEncoded(url, data) {
+                return fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                    body: new URLSearchParams(data)
+                });
+            }
+
+            // Email submit
+            const emailForm = document.getElementById('emailForm');
+            if (emailForm) {
+                emailForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const value = document.getElementById('modalEmailInput').value.trim();
+                    if (!value) return;
+
+                    const token = emailForm.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                    postFormEncoded('/Profile/UpdateEmail', {
+                        Email: value,
+                        __RequestVerificationToken: token
+                    })
+                        .then(r => {
+                            if (!r.ok) return r.text().then(t => { throw new Error(t || ''); });
+                            document.getElementById('emailInput').value = value;
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById('emailModal')).hide();
+                            showAlert('E‑mail byl aktualizován.', 'success');
+                        })
+                        .catch((err) => showAlert(err.message || 'Nepodařilo se aktualizovat e‑mail.', 'danger'));
+                });
+            }
+
+            // Phone submit
+            const phoneForm = document.getElementById('phoneForm');
+            if (phoneForm) {
+                phoneForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const cc = document.getElementById('modalPhoneCountry').value; // +420 / +421
+                    let local = digitsOnly(document.getElementById('modalPhoneLocal').value).replace(/^0+/, ''); // odstraň úvodní nuly
+
+                    if (!/^\+\d{3}$/.test(cc) || local.length !== 9) {
+                        showAlert('Vyberte předvolbu a zadejte 9 číslic bez mezer.', 'danger');
+                        return;
+                    }
+
+                    const normalized = cc + local;
+                    const token = phoneForm.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+
+                    postFormEncoded('/Profile/UpdatePhone', {
+                        PhoneNumber: normalized,
+                        __RequestVerificationToken: token
+                    })
+                        .then(async r => {
+                            const text = await r.text();
+                            if (!r.ok) throw new Error(text || 'Chyba při ukládání.');
+
+                            const display = text || formatDisplay(normalized);
+                            document.getElementById('phoneInput').value = display;
+
+                            bootstrap.Modal.getOrCreateInstance(document.getElementById('phoneModal')).hide();
+                            showAlert('Telefon byl aktualizován.', 'success');
+                        })
+                        .catch((err) => showAlert(err.message || 'Nepodařilo se aktualizovat telefon.', 'danger'));
+                });
+            }
+        })();
+    </script>
+}

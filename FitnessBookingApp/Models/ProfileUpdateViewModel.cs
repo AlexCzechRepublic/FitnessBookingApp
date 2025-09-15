@@ -1,24 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using FitnessBookingApp.Validators;
 
 namespace FitnessBookingApp.Models
 {
-    public class User
+    public class ProfileUpdateViewModel
     {
-        public int Id { get; set; }
-
-        [Required, EmailAddress]
-        public string Email { get; set; } = null!;
-
-        [Required]
-        [MinLength(3, ErrorMessage = "Uživatelské jméno musí mít alespoň 3 znaky.")]
-        public string Username { get; set; } = null!;
-
-        [Required]
-        public string Password { get; set; } = null!;
-
-        public string Role { get; set; } = "User";
-
         [Required(ErrorMessage = "Jméno je povinné."), StringLength(50)]
         public string? FirstName { get; set; }
 
@@ -37,11 +22,5 @@ namespace FitnessBookingApp.Models
 
         [Required(ErrorMessage = "Město je povinné."), StringLength(100)]
         public string? City { get; set; }
-
-        [Required(ErrorMessage = "Telefon je povinný.")]
-        [CzSkPhone]
-        public string? PhoneNumber { get; set; }
-
-        public List<TrainingRegistration> TrainingRegistrations { get; set; } = new();
     }
 }
