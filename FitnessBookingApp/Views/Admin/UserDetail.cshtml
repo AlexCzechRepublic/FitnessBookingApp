@@ -1,0 +1,53 @@
+﻿@model IEnumerable<FitnessBookingApp.Models.Entry>
+@{
+    var user = ViewBag.User as FitnessBookingApp.Models.User;
+    var balance = (decimal)ViewBag.Balance;
+}
+
+<h2>Uživatel: @user.Username (@user.FirstName @user.LastName)</h2>
+<p>Aktuální balance: <strong>@balance Kč</strong></p>
+<hr />
+<h4>Přidat/odebrat vstup</h4>
+<form asp-action="AddEntry" method="post" class="row g-2 mb-3">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="userId" value="@user.Id" />
+    <div class="col-md-3">
+        <input type="number" step="1" name="amount" class="form-control" placeholder="Částka (+/-)" required />
+    </div>
+    <div class="col-md-6">
+        <input type="text" name="note" class="form-control" placeholder="Poznámka" />
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-success">Přidat vstup</button>
+    </div>
+</form>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Datum</th>
+            <th>Částka</th>
+            <th>Poznámka</th>
+            <th>Typ</th>
+            <th>Akce</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model)
+        {
+            <tr>
+                <td>@entry.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@entry.Amount Kč</td>
+                <td>@entry.Note</td>
+                <td>@entry.Type</td>
+                <td>
+                    <form asp-action="RemoveEntry" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="entryId" value="@entry.Id" />
+                        <input type="hidden" name="userId" value="@entry.UserId" />
+                        <button type="submit" class="btn btn-danger btn-sm">Odebrat</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

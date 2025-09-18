@@ -6,15 +6,16 @@ using FitnessBookingApp.Utils;
 
 namespace FitnessBookingApp.Controllers
 {
-    public class ProfileController : Controller
+    public class ProfileController : BaseController
     {
         private readonly DataService _dataService;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
-        public ProfileController(DataService dataService)
+        public ProfileController(DataService dataService) : base(dataService)
         {
             _dataService = dataService;
-        }
+        }       
+
 
         [HttpGet]
         public IActionResult Profile()
@@ -102,6 +103,22 @@ namespace FitnessBookingApp.Controllers
             user.Email = Email.Trim();
             _dataService.UpdateUser(user);
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult Balance()
+        {
+            var username = HttpContext.Session.GetString("User");
+            if (string.IsNullOrEmpty(username)) return RedirectToAction("Login", "Account");
+
+            var user = _dataService.GetUserByName(username);
+            if (user == null) return NotFound();
+
+            var entries = _dataService.GetEntriesForUser(user.Id);
+            var balance = _dataService.GetBalance(user.Id);
+
+            ViewBag.Balance = balance;
+            return View("~/Views/Account/Balance.cshtml", entries);
         }
     }
 }

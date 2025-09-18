@@ -1,4 +1,14 @@
 ﻿@* Shared layout *@
+@{
+    var username = Context.Session.GetString("User");
+    int pocetVstupu = 0;
+    if (!string.IsNullOrEmpty(username))
+    {
+        var balanceObj = ViewBag.UserBalance;
+        decimal balance = balanceObj != null ? (decimal)balanceObj : 0;
+        pocetVstupu = (int)Math.Floor(balance / 200);
+    }
+}
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -27,25 +37,28 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-
-                    <ul class="navbar-nav">
-                        @if (Context.Session.GetString("User") != null)
+                    <ul class="navbar-nav ms-auto">
+                        @if (Context.Session.GetString("Role") == "Admin")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light me-3" asp-controller="Account" asp-action="Profile">
-                                    <i class="fas fa-user"></i> @Context.Session.GetString("User")
+                                <a class="nav-link text-light" asp-controller="Admin" asp-action="Users">Uživatelé</a>
+                            </li>
+                        }
+                        @if (!string.IsNullOrEmpty(username))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Profile" asp-action="Balance">
+                                    <i class="fas fa-wallet"></i> Moje balance
+                                    <span class="badge bg-info ms-1">@pocetVstupu vstupů</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-outline-light" asp-controller="Account" asp-action="Logout">
+                                <a class="nav-link text-light" asp-controller="Account" asp-action="Profile">
+                                    <i class="fas fa-user"></i> @username
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Account" asp-action="Logout">
                                     <i class="fas fa-sign-out-alt"></i> Odhlásit
                                 </a>
                             </li>

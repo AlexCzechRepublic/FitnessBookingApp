@@ -1,0 +1,28 @@
+﻿@model IEnumerable<FitnessBookingApp.Models.Entry>
+@{
+    ViewBag.Title = "Moje balance";
+    var balance = (decimal)ViewBag.Balance;
+}
+
+<h2>Moje balance: <span class="fw-bold">@balance Kč</span></h2>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Datum</th>
+            <th>Částka</th>
+            <th>Poznámka</th>
+            <th>Typ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model)
+        {
+            <tr>
+                <td>@entry.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@entry.Amount Kč</td>
+                <td>@entry.Note</td>
+                <td>@entry.Type</td>
+            </tr>
+        }
+    </tbody>
+</table>

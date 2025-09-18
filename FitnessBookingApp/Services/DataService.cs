@@ -117,5 +117,40 @@ namespace FitnessBookingApp.Services
                 _context.SaveChanges();
             }
         }
+        public List<Entry> GetEntriesForUser(int userId)
+        {
+            return _context.tbEntries.Where(e => e.UserId == userId)
+                .OrderByDescending(e => e.Date)
+                .ToList();
+        }
+
+        public decimal GetBalance(int userId)
+        {
+            return _context.tbEntries.Where(e => e.UserId == userId).Sum(e => e.Amount);
+        }
+
+        public void AddEntry(int userId, decimal amount, string note, string type)
+        {
+            var entry = new Entry
+            {
+                UserId = userId,
+                Date = DateTime.Now,
+                Amount = amount,
+                Note = note,
+                Type = type
+            };
+            _context.tbEntries.Add(entry);
+            _context.SaveChanges();
+        }
+
+        public void RemoveEntry(int entryId)
+        {
+            var entry = _context.tbEntries.FirstOrDefault(e => e.Id == entryId);
+            if (entry != null)
+            {
+                _context.tbEntries.Remove(entry);
+                _context.SaveChanges();
+            }
+        }
     }
 }

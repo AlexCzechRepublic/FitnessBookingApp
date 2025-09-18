@@ -1,0 +1,32 @@
+﻿@model IEnumerable<FitnessBookingApp.Models.User>
+@{
+    ViewBag.Title = "Admin – Uživatelé";
+}
+
+<h2>Všichni uživatelé</h2>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Jméno</th>
+            <th>Příjmení</th>
+            <th>Uživatelské jméno</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>@user.PhoneNumber</td>
+                <td>@user.Role</td>
+            </tr>
+        }
+    </tbody>
+</table>

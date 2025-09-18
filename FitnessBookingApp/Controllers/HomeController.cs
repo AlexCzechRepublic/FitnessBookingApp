@@ -4,11 +4,11 @@ using FitnessBookingApp.Services;
 
 namespace FitnessBookingApp.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly DataService _dataService;
 
-        public HomeController(DataService dataService)
+        public HomeController(DataService dataService) : base(dataService)     
         {
             _dataService = dataService;
             if (!_dataService.GetTrainings().Any())

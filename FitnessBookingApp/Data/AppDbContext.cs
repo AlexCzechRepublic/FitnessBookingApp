@@ -9,6 +9,8 @@ namespace FitnessBookingApp.Data
         public DbSet<Training> tbTrainings { get; set; } = null!;
         public DbSet<TrainingRegistration> tbTrainingRegistrations { get; set; } = null!;
 
+        public DbSet<Entry> tbEntries { get; set; }
+
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

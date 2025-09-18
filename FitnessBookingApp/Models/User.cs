@@ -43,5 +43,8 @@ namespace FitnessBookingApp.Models
         public string? PhoneNumber { get; set; }
 
         public List<TrainingRegistration> TrainingRegistrations { get; set; } = new();
+
+        public decimal Balance { get; set; } // vypočítané z entry
+        public ICollection<Entry> Entries { get; set; }
     }
 }

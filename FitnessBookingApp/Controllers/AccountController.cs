@@ -6,15 +6,15 @@ using FitnessBookingApp.Services;
 
 namespace FitnessBookingApp.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly DataService _dataService;
         private readonly PasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
-        public AccountController(DataService dataService)
+        public AccountController(DataService dataService) :base(dataService)
         {
             _dataService = dataService;
-        }
+        }       
 
         // --- LOGIN GET ---
         [HttpGet]

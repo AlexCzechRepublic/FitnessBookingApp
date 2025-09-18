@@ -1,16 +1,17 @@
-﻿using FitnessBookingApp.Models;
+﻿using FitnessBookingApp.Controllers;
+using FitnessBookingApp.Models;
 using FitnessBookingApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-public class TrainingController : Controller
+public class TrainingController : BaseController
 {
     private readonly DataService _dataService;
 
 
-    public TrainingController(DataService dataService)
+    public TrainingController(DataService dataService) : base(dataService)
     {
         _dataService = dataService;
-    }
+    }       
 
     public IActionResult Index()
     {
